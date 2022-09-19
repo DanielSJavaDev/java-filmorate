@@ -4,8 +4,8 @@ package ru.yandex.practicum.filmorate;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.model.Film;
-import ru.yandex.practicum.model.User;
+import filmorate.model.Film;
+import filmorate.model.User;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;

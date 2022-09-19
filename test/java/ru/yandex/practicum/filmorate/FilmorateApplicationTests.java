@@ -1,19 +1,21 @@
 package ru.yandex.practicum.filmorate;
 
+import filmorate.FilmorateApplication;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.boot.test.context.SpringBootTest;
-import ru.yandex.practicum.controller.FilmController;
-import ru.yandex.practicum.controller.UserController;
-import ru.yandex.practicum.exception.ValidationException;
-import ru.yandex.practicum.model.Film;
-import ru.yandex.practicum.model.User;
+import org.springframework.test.context.ContextConfiguration;
+import filmorate.controller.FilmController;
+import filmorate.controller.UserController;
+import filmorate.exception.ValidationException;
+import filmorate.model.Film;
+import filmorate.model.User;
 
 import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-@SpringBootTest
+@SpringBootTest(classes = FilmorateApplication.class)
 class FilmorateApplicationTests { // класс тестов эндпоинтов
 
 	@Test
@@ -29,7 +31,7 @@ class FilmorateApplicationTests { // класс тестов эндпоинто�
 		film.setReleaseDate(LocalDate.of(1895, 12, 28));
 		film.setDuration(90L);
 		film.setName("Green mile");
-		Film result = filmController.post(film);
+		Film result = filmController.create(film);
 		assertNotNull(filmController.get(), "Фильмы не возвращаются"); // тест гет запроса
 		assertEquals(result, film, "Фильмы не возвращаются"); // тест пост запроса
 		film.setName("Psycho");
@@ -38,7 +40,7 @@ class FilmorateApplicationTests { // класс тестов эндпоинто�
 		film.setReleaseDate(LocalDate.of(1895, 12, 27));
 		final ValidationException exception = assertThrows(
 				ValidationException.class,
-				() -> filmController.post(film)
+				() -> filmController.create(film)
 		);
 		assertEquals("Incorrect date", exception.getMessage()); // валидация даты
 	}
@@ -52,12 +54,12 @@ class FilmorateApplicationTests { // класс тестов эндпоинто�
 		user.setLogin("Svin");
 		user.setName("Borov");
 		user.setBirthday(LocalDate.of(1895, 12, 28));
-		User logName = userController.post(user);
+		User logName = userController.create(user);
 		assertEquals(logName, user, "Замена имени на логин не работает"); // добавление без имени
 		user.setLogin("Sv in");
 		final ValidationException exception = assertThrows(
 				ValidationException.class,
-				() -> userController.post(user)
+				() -> userController.create(user)
 		);
 		assertEquals("Incorrect login", exception.getMessage()); // валидация логина
 

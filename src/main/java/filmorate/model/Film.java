@@ -1,4 +1,4 @@
-package ru.yandex.practicum.model;
+package filmorate.model;
 
 import lombok.Data;
 

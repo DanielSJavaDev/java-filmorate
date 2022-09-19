@@ -1,4 +1,4 @@
-package ru.yandex.practicum.exception;
+package filmorate.exception;
 
 public class ValidationException extends Throwable {
 
