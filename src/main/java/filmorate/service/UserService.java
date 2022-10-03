@@ -1,2 +1,4 @@
-package filmorate.service;public class UserService {
+package filmorate.service;
+
+public class UserService {
 }

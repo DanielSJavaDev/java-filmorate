@@ -1,10 +1,11 @@
 package ru.yandex.practicum.filmorate;
 
 import filmorate.FilmorateApplication;
+import filmorate.storage.InMemoryFilmStorage;
+import filmorate.storage.InMemoryUserStorage;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
 import filmorate.controller.FilmController;
 import filmorate.controller.UserController;
 import filmorate.exception.ValidationException;
@@ -24,7 +25,8 @@ class FilmorateApplicationTests { // класс тестов эндпоинто�
 
 	@Test
 	public void testFilmController() throws ValidationException {
-		FilmController filmController = new FilmController();
+		InMemoryFilmStorage filmStorage = new InMemoryFilmStorage();
+		FilmController filmController = new FilmController(filmStorage);
 		Film film = new Film();
 		film.setId(1);
 		film.setDescription("I'm tired boss");
@@ -47,7 +49,8 @@ class FilmorateApplicationTests { // класс тестов эндпоинто�
 
 	@Test
 	public void testUserController() throws ValidationException {
-		UserController userController = new UserController();
+		InMemoryUserStorage userStorage = new InMemoryUserStorage();
+		UserController userController = new UserController(userStorage);
 		User user = new User();
 		user.setId(1);
 		user.setEmail("user@email.com");
