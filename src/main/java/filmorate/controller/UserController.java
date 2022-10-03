@@ -1,6 +1,7 @@
 package filmorate.controller;
 
 import filmorate.storage.InMemoryUserStorage;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -13,12 +14,9 @@ import java.util.*;
 @Slf4j
 @RestController
 @RequestMapping("/users")
-@Validated
+@RequiredArgsConstructor
 public class UserController {
     InMemoryUserStorage userStorage;
-    public UserController(InMemoryUserStorage userStorage) {
-        this.userStorage = userStorage;
-    }
 
     @GetMapping
     public List<User> get() {
