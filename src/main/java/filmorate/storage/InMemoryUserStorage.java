@@ -13,7 +13,7 @@ import java.util.Map;
 @Component
 public class InMemoryUserStorage implements UserStorage {
 
-    public final Map<Integer, User> usersData = new HashMap<>();
+    private final Map<Integer, User> usersData = new HashMap<>();
     @Override
     public User create(User user) throws ValidationException {
         User validUser = validate(user);
@@ -55,5 +55,9 @@ public class InMemoryUserStorage implements UserStorage {
         } else {
             return user;
         }
+    }
+    @Override
+    public Map<Integer, User> getUsersData() {
+        return usersData;
     }
 }

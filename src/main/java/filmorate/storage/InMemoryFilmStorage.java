@@ -55,4 +55,8 @@ public class InMemoryFilmStorage implements FilmStorage {
         return List.copyOf(filmData.values());
     }
 
+    @Override
+    public Map<Integer, Film> getFilmData() {
+        return filmData;
+    }
 }

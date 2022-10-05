@@ -4,6 +4,7 @@ import filmorate.exception.ValidationException;
 import filmorate.model.Film;
 
 import java.util.List;
+import java.util.Map;
 
 
 public interface FilmStorage {
@@ -12,4 +13,5 @@ public interface FilmStorage {
     Film delete(Film film);
     Film validate(Film film) throws ValidationException;
     List<Film> getData();
+    Map<Integer, Film> getFilmData();
 }
