@@ -44,7 +44,7 @@ public class FilmService {
         return filmStorage.getFilmData().get(filmId);
     }
 
-    public List<Film> getRating() {
-        return filmRating.stream().limit(10).collect(Collectors.toList());
+    public List<Film> getRating(int size) {
+        return filmRating.stream().limit(size).collect(Collectors.toList());
     }
 }

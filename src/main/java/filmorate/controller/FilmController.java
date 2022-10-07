@@ -1,5 +1,6 @@
 package filmorate.controller;
 
+import filmorate.service.FilmService;
 import filmorate.storage.InMemoryFilmStorage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,11 +17,16 @@ import java.util.*;
 @RequiredArgsConstructor
 public class FilmController {
     private final InMemoryFilmStorage filmStorage;
+    private final FilmService service;
 
     @GetMapping
     public List<Film> get() {
-
         return filmStorage.getData();
+    }
+
+    @GetMapping("/popular?count={count}")
+    public List<Film> getPopular(@RequestParam(defaultValue = "10", required = false) Integer size) {
+        return service.getRating(size);
     }
 
     @PostMapping
@@ -33,6 +39,15 @@ public class FilmController {
     public Film put(@Valid @RequestBody Film film) throws ValidationException {
 
         return filmStorage.put(film);
+    }
+    @PutMapping("/{id}/like/{userId}")
+    public Film like(@PathVariable int filmId, int userId) {
+        return service.addLike(filmId, userId);
+    }
+
+    @DeleteMapping("/{id}/like/{userId}")
+    public Film delete(@PathVariable int filmId, int userId) {
+        return service.deleteLike(filmId, userId);
     }
 
 }
