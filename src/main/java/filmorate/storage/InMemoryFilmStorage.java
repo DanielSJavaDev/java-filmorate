@@ -1,5 +1,6 @@
 package filmorate.storage;
 
+import filmorate.exception.ParameterNotFoundException;
 import filmorate.exception.ValidationException;
 import filmorate.model.Film;
 import lombok.extern.slf4j.Slf4j;
@@ -24,16 +25,15 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public Film put(Film film) throws ValidationException {
-        Film validFilm = validate(film);
-        filmData.put(validFilm.getId(), validFilm);
-        log.info("Фильм изменён");
-        return validFilm;
-    }
-
-    @Override
-    public Film delete(Film film) {
-        return null;
+    public Film put(Film film) throws ValidationException, ParameterNotFoundException {
+        if (!filmData.containsKey(film.getId())) {
+            throw new ParameterNotFoundException("film not found");
+        } else {
+            Film validFilm = validate(film);
+            filmData.put(validFilm.getId(), validFilm);
+            log.info("Фильм изменён");
+            return validFilm;
+        }
     }
 
     @Override

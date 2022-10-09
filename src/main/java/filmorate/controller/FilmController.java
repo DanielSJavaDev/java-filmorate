@@ -1,8 +1,8 @@
 package filmorate.controller;
 
+import filmorate.exception.ParameterNotFoundException;
 import filmorate.service.FilmService;
 import filmorate.storage.InMemoryFilmStorage;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import filmorate.exception.ValidationException;
@@ -14,10 +14,14 @@ import java.util.*;
 @Slf4j
 @RestController
 @RequestMapping("/films")
-@RequiredArgsConstructor
+
 public class FilmController {
     private final InMemoryFilmStorage filmStorage;
     private final FilmService service;
+    public FilmController(InMemoryFilmStorage filmStorage, FilmService service) {
+        this.filmStorage = filmStorage;
+        this.service = service;
+    }
 
     @GetMapping
     public List<Film> get() {
@@ -36,17 +40,17 @@ public class FilmController {
     }
 
     @PutMapping
-    public Film put(@Valid @RequestBody Film film) throws ValidationException {
+    public Film put(@Valid @RequestBody Film film) throws ValidationException, ParameterNotFoundException {
 
         return filmStorage.put(film);
     }
     @PutMapping("/{id}/like/{userId}")
-    public Film like(@PathVariable int filmId, int userId) {
+    public Film like(@PathVariable int filmId, int userId) throws ParameterNotFoundException {
         return service.addLike(filmId, userId);
     }
 
     @DeleteMapping("/{id}/like/{userId}")
-    public Film delete(@PathVariable int filmId, int userId) {
+    public Film delete(@PathVariable int filmId, int userId) throws ParameterNotFoundException {
         return service.deleteLike(filmId, userId);
     }
 

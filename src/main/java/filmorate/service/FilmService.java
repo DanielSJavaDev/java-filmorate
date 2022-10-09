@@ -1,12 +1,13 @@
 package filmorate.service;
 
+import filmorate.exception.ParameterNotFoundException;
 import filmorate.model.Film;
 import filmorate.storage.FilmStorage;
 import filmorate.storage.UserStorage;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.validation.ValidationException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.TreeSet;
@@ -17,13 +18,19 @@ import java.util.stream.Collectors;
 public class FilmService {
     FilmStorage filmStorage;
     UserStorage userStorage;
+    @Autowired
+    public FilmService(FilmStorage filmStorage, UserStorage userStorage) {
+        this.filmStorage = filmStorage;
+        this.userStorage = userStorage;
+    }
+
     TreeSet<Film> filmRating = new TreeSet<>(Comparator.comparing(Film::getLikes,
             Comparator.nullsLast(Comparator.naturalOrder())));
     public Film addLike(int filmId, int userId) {
         if (!filmStorage.getFilmData().containsKey(filmId)) {
-            throw new ValidationException("can't find film");
+            throw new ParameterNotFoundException("can't find film");
         } else if (filmStorage.getFilmData().get(filmId).getLiked().contains(userStorage.getUsersData().get(userId))) {
-            throw new ValidationException("like already exist");
+            throw new ParameterNotFoundException("like already exist");
         } else {
             filmStorage.getFilmData().get(filmId).setLikes(filmStorage.getFilmData().get(filmId).getLikes() + 1);
             filmRating.add(filmStorage.getFilmData().get(filmId));
@@ -34,9 +41,9 @@ public class FilmService {
     }
     public Film deleteLike(int filmId, int userId) {
         if (!filmStorage.getFilmData().containsKey(filmId)) {
-            throw new ValidationException("can't find film");
+            throw new ParameterNotFoundException("can't find film");
         } else if (!filmStorage.getFilmData().get(filmId).getLiked().contains(userStorage.getUsersData().get(userId))) {
-            throw new ValidationException("can't find like");
+            throw new ParameterNotFoundException("can't find like");
         } else {
             filmStorage.getFilmData().get(filmId).setLikes(filmStorage.getFilmData().get(filmId).getLikes() - 1);
             log.info("like deleted");

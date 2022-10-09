@@ -10,7 +10,6 @@ import java.util.Map;
 public interface FilmStorage {
     Film create(Film film) throws ValidationException;
     Film put(Film film) throws ValidationException;
-    Film delete(Film film);
     Film validate(Film film) throws ValidationException;
     List<Film> getData();
     Map<Integer, Film> getFilmData();

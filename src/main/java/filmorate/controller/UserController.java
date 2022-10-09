@@ -1,9 +1,11 @@
 package filmorate.controller;
 
+import filmorate.exception.ParameterNotFoundException;
 import filmorate.service.UserService;
 import filmorate.storage.InMemoryUserStorage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import filmorate.exception.ValidationException;
@@ -15,10 +17,13 @@ import java.util.*;
 @Slf4j
 @RestController
 @RequestMapping("/users")
-@RequiredArgsConstructor
 public class UserController {
     private final InMemoryUserStorage userStorage;
     private final UserService service;
+    public UserController(InMemoryUserStorage userStorage, UserService service) {
+        this.userStorage = userStorage;
+        this.service = service;
+    }
 
     @GetMapping
     public List<User> get() {
@@ -36,10 +41,8 @@ public class UserController {
 
 
     @GetMapping("/{userId}")
-    public Optional<User> findById(@PathVariable int userId) {
-        return userStorage.getData().stream()
-                .filter(x -> x.getId() == userId)
-                .findFirst();
+    public User findById(@PathVariable int userId) throws ParameterNotFoundException {
+        return userStorage.getUser(userId);
     }
 
     @PostMapping
@@ -48,15 +51,15 @@ public class UserController {
     }
 
     @PutMapping
-    public User put(@Valid @RequestBody User user) throws ValidationException {
+    public User put(@Valid @RequestBody User user) throws ValidationException, ParameterNotFoundException {
         return userStorage.put(user);
     }
     @PutMapping("/{id}/friends/{friendId} ")
-    public User addFriend(@PathVariable int userId, int friendId) {
+    public User addFriend(@PathVariable int userId, int friendId) throws ParameterNotFoundException {
         return service.add(userId, friendId);
     }
     @DeleteMapping("/{id}/friends/{friendId}")
-    public User deleteFriend(@PathVariable int userId, int friendId) {
+    public User deleteFriend(@PathVariable int userId, int friendId) throws ParameterNotFoundException {
         return service.delete(userId, friendId);
     }
 

@@ -28,7 +28,8 @@ class FilmorateApplicationTests { // класс тестов эндпоинто�
 	@Test
 	public void testFilmController() throws ValidationException {
 		InMemoryFilmStorage filmStorage = new InMemoryFilmStorage();
-		FilmService service = new FilmService();
+		InMemoryUserStorage userStorage = new InMemoryUserStorage();
+		FilmService service = new FilmService(filmStorage, userStorage);
 		FilmController filmController = new FilmController(filmStorage, service);
 		Film film = new Film();
 		film.setId(1);
@@ -45,15 +46,16 @@ class FilmorateApplicationTests { // класс тестов эндпоинто�
 		film.setReleaseDate(LocalDate.of(1895, 12, 27));
 		final ValidationException exception = assertThrows(
 				ValidationException.class,
-				() -> filmController.create(film)
+				() -> filmStorage.create(film)
 		);
-		assertEquals("Incorrect date", exception.getMessage()); // валидация даты
+		assertEquals("Incorrect date", exception.getParameter()); // валидация даты
+
 	}
 
 	@Test
 	public void testUserController() throws ValidationException {
 		InMemoryUserStorage userStorage = new InMemoryUserStorage();
-		UserService service = new UserService();
+		UserService service = new UserService(userStorage);
 		UserController userController = new UserController(userStorage, service);
 		User user = new User();
 		user.setId(1);
@@ -68,7 +70,7 @@ class FilmorateApplicationTests { // класс тестов эндпоинто�
 				ValidationException.class,
 				() -> userController.create(user)
 		);
-		assertEquals("Incorrect login", exception.getMessage()); // валидация логина
+		assertEquals("Incorrect login", exception.getParameter()); // валидация логина
 
 		user.setLogin("Svin");
 		user.setName("Borov");
