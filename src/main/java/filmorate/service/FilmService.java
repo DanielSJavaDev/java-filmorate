@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -53,9 +52,8 @@ public class FilmService {
     }
 
     public List<Film> getRating(int size) {
-        List<Film> reversed = filmStorage.getFilmRating().stream().limit(size)
-                .sorted(Comparator.comparingInt(Film::getRate)).collect(Collectors.toList());
-        Collections.reverse(reversed);
-        return reversed;
+
+        return filmStorage.getFilmRating().stream().limit(size)
+                .sorted(Comparator.comparingInt(Film::getRate).reversed()).collect(Collectors.toList());
     }
 }

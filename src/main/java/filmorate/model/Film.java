@@ -12,7 +12,7 @@ public class Film {
     Set<Integer> liked = new HashSet<>();
     int rate = 0;
 
-    int id = 0;
+    Integer id = 0;
 
     @NotNull
     @NotBlank
@@ -26,4 +26,5 @@ public class Film {
 
     @Positive
     long duration;
+
 }

@@ -10,7 +10,6 @@ import filmorate.model.Film;
 
 import javax.validation.Valid;
 import java.util.*;
-import java.util.stream.Stream;
 
 @Slf4j
 @RestController
