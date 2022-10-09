@@ -8,7 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -43,15 +45,17 @@ public class FilmService {
             throw new ParameterNotFoundException("can't find like");
         } else {
             int likes = filmStorage.getFilmData().get(filmId).getRate();
-            filmStorage.getFilmData().get(filmId).setRate(likes - 1); // удалил лайк
-            filmStorage.getFilmData().get(filmId).getLiked().remove(userId); // удалил лайкнувшего юзера
+            filmStorage.getFilmData().get(filmId).setRate(likes - 1);
+            filmStorage.getFilmData().get(filmId).getLiked().remove(userId);
             log.info("like deleted");
         }
         return "like deleted";
     }
 
     public List<Film> getRating(int size) {
-        return filmStorage.getFilmRating().stream().sorted(Comparator.comparing(Film::getRate,
-                Comparator.nullsLast(Comparator.naturalOrder()))).limit(size).collect(Collectors.toList());
+        List<Film> reversed = filmStorage.getFilmRating().stream().limit(size)
+                .sorted(Comparator.comparingInt(Film::getRate)).collect(Collectors.toList());
+        Collections.reverse(reversed);
+        return reversed;
     }
 }
