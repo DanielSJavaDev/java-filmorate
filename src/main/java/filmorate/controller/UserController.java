@@ -3,10 +3,7 @@ package filmorate.controller;
 import filmorate.exception.ParameterNotFoundException;
 import filmorate.service.UserService;
 import filmorate.storage.InMemoryUserStorage;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import filmorate.exception.ValidationException;
 import filmorate.model.User;
@@ -30,18 +27,18 @@ public class UserController {
         return userStorage.getData();
     }
     @GetMapping("/{id}/friends")
-    public List<User> getFriends(@PathVariable int userId) {
+    public List<User> getFriends(@PathVariable("id") int userId) {
         return service.friends(userId);
     }
 
     @GetMapping("/{id}/friends/common/{otherId}")
-    public List<User> getOtherFriends(@PathVariable int userId, int otherId) {
+    public List<User> getOtherFriends(@PathVariable("id") int userId,
+                                      @PathVariable("otherId") int otherId) {
         return service.jointFriends(userId, otherId);
     }
 
-
     @GetMapping("/{userId}")
-    public User findById(@PathVariable int userId) throws ParameterNotFoundException {
+    public User findById(@PathVariable("userId") int userId) throws ParameterNotFoundException {
         return userStorage.getUser(userId);
     }
 
@@ -54,13 +51,16 @@ public class UserController {
     public User put(@Valid @RequestBody User user) throws ValidationException, ParameterNotFoundException {
         return userStorage.put(user);
     }
-    @PutMapping("/{id}/friends/{friendId} ")
-    public User addFriend(@PathVariable int userId, int friendId) throws ParameterNotFoundException {
+
+    @PutMapping("/{userId}/friends/{friendId}")
+    public User addFriend(@PathVariable("userId") int userId,
+                          @PathVariable("friendId") int friendId) throws ParameterNotFoundException {
         return service.add(userId, friendId);
     }
-    @DeleteMapping("/{id}/friends/{friendId}")
-    public User deleteFriend(@PathVariable int userId, int friendId) throws ParameterNotFoundException {
+
+    @DeleteMapping("/{userId}/friends/{friendId}")
+    public User deleteFriend(@PathVariable("userId") int userId,
+                             @PathVariable("friendId") int friendId) throws ParameterNotFoundException {
         return service.delete(userId, friendId);
     }
-
 }

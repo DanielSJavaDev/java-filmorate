@@ -13,6 +13,7 @@ import java.util.Map;
 @Slf4j
 @Component
 public class InMemoryUserStorage implements UserStorage {
+    private int userId = 1;
 
     private final Map<Integer, User> usersData = new HashMap<>();
     @Override
@@ -21,6 +22,9 @@ public class InMemoryUserStorage implements UserStorage {
         if (validUser.getName().isEmpty()) {
             validUser.setName(validUser.getLogin());
             log.info("Логин присвоен имени");
+        }
+        if (validUser.getId() == 0) {
+            validUser.setId(userId++);
         }
         usersData.put(validUser.getId(), validUser);
         log.info("Пользователь добавлен");
@@ -37,7 +41,6 @@ public class InMemoryUserStorage implements UserStorage {
             log.info("Пользователь изменён");
             return validUser;
         }
-
     }
 
     @Override
@@ -66,6 +69,7 @@ public class InMemoryUserStorage implements UserStorage {
         } else {
             return user;
         }
+
     }
     @Override
     public Map<Integer, User> getUsersData() {

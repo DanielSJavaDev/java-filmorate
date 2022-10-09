@@ -10,7 +10,7 @@ import java.util.Set;
 @Data
 public class User {
     Set<Integer> friends = new HashSet<>();
-    int id = 1;
+    int id = 0;
 
     @Email
     String email;

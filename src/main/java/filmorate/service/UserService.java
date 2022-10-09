@@ -26,6 +26,7 @@ public class UserService {
             throw new ParameterNotFoundException("can't find friend");
         } else {
             userStorage.getUsersData().get(userId).getFriends().add(friendId);
+            userStorage.getUsersData().get(friendId).getFriends().add(userId);
             log.info("friend added");
         }
         return userStorage.getUsersData().get(friendId);

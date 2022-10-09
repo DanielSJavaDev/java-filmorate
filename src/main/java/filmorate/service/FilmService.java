@@ -8,9 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -24,34 +22,36 @@ public class FilmService {
         this.userStorage = userStorage;
     }
 
-    TreeSet<Film> filmRating = new TreeSet<>(Comparator.comparing(Film::getLikes,
-            Comparator.nullsLast(Comparator.naturalOrder())));
+
     public Film addLike(int filmId, int userId) {
         if (!filmStorage.getFilmData().containsKey(filmId)) {
             throw new ParameterNotFoundException("can't find film");
-        } else if (filmStorage.getFilmData().get(filmId).getLiked().contains(userStorage.getUsersData().get(userId))) {
+        } else if (filmStorage.getFilmData().get(filmId).getLiked().contains(userId)) {
             throw new ParameterNotFoundException("like already exist");
         } else {
-            filmStorage.getFilmData().get(filmId).setLikes(filmStorage.getFilmData().get(filmId).getLikes() + 1);
-            filmRating.add(filmStorage.getFilmData().get(filmId));
-            filmStorage.getFilmData().get(filmId).getLiked().add(userStorage.getUsersData().get(userId));
+            int filmLikes = filmStorage.getFilmData().get(filmId).getRate();
+            filmStorage.getFilmData().get(filmId).setRate(filmLikes + 1);
+            filmStorage.getFilmData().get(filmId).getLiked().add(userId);
             log.info("like added");
         }
         return filmStorage.getFilmData().get(filmId);
     }
-    public Film deleteLike(int filmId, int userId) {
+    public String deleteLike(int filmId, int userId) {
         if (!filmStorage.getFilmData().containsKey(filmId)) {
             throw new ParameterNotFoundException("can't find film");
-        } else if (!filmStorage.getFilmData().get(filmId).getLiked().contains(userStorage.getUsersData().get(userId))) {
+        } else if (!filmStorage.getFilmData().get(filmId).getLiked().contains(userId)) {
             throw new ParameterNotFoundException("can't find like");
         } else {
-            filmStorage.getFilmData().get(filmId).setLikes(filmStorage.getFilmData().get(filmId).getLikes() - 1);
+            int likes = filmStorage.getFilmData().get(filmId).getRate();
+            filmStorage.getFilmData().get(filmId).setRate(likes - 1); // удалил лайк
+            filmStorage.getFilmData().get(filmId).getLiked().remove(userId); // удалил лайкнувшего юзера
             log.info("like deleted");
         }
-        return filmStorage.getFilmData().get(filmId);
+        return "like deleted";
     }
 
     public List<Film> getRating(int size) {
-        return filmRating.stream().limit(size).collect(Collectors.toList());
+        return filmStorage.getFilmRating().stream().sorted(Comparator.comparing(Film::getRate,
+                Comparator.nullsLast(Comparator.naturalOrder()))).limit(size).collect(Collectors.toList());
     }
 }

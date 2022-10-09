@@ -27,31 +27,34 @@ public class FilmController {
     public List<Film> get() {
         return filmStorage.getData();
     }
+    @GetMapping("/{filmId}")
+    public Film findById(@PathVariable("filmId") int filmId) throws ParameterNotFoundException {
+        return filmStorage.getFilm(filmId);
+    }
 
-    @GetMapping("/popular?count={count}")
-    public List<Film> getPopular(@RequestParam(defaultValue = "10", required = false) Integer size) {
+    @GetMapping("/popular")
+    public List<Film> getPopular(@RequestParam(name = "count", defaultValue = "10", required = false) Integer size) {
         return service.getRating(size);
     }
 
     @PostMapping
     public Film create(@Valid @RequestBody Film film) throws ValidationException {
-
         return filmStorage.create(film);
     }
 
     @PutMapping
     public Film put(@Valid @RequestBody Film film) throws ValidationException, ParameterNotFoundException {
-
         return filmStorage.put(film);
     }
-    @PutMapping("/{id}/like/{userId}")
-    public Film like(@PathVariable int filmId, int userId) throws ParameterNotFoundException {
+    @PutMapping("/{filmId}/like/{userId}")
+    public Film like(@PathVariable("filmId") int filmId,
+                     @PathVariable("userId") int userId) throws ParameterNotFoundException {
         return service.addLike(filmId, userId);
     }
 
-    @DeleteMapping("/{id}/like/{userId}")
-    public Film delete(@PathVariable int filmId, int userId) throws ParameterNotFoundException {
+    @DeleteMapping("/{filmId}/like/{userId}")
+    public String delete(@PathVariable("filmId") int filmId,
+                         @PathVariable("userId") int userId) throws ParameterNotFoundException {
         return service.deleteLike(filmId, userId);
     }
-
 }

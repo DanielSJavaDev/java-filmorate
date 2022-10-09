@@ -15,6 +15,9 @@ import filmorate.model.Film;
 import filmorate.model.User;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -49,7 +52,6 @@ class FilmorateApplicationTests { // класс тестов эндпоинто�
 				() -> filmStorage.create(film)
 		);
 		assertEquals("Incorrect date", exception.getParameter()); // валидация даты
-
 	}
 
 	@Test
@@ -76,6 +78,16 @@ class FilmorateApplicationTests { // класс тестов эндпоинто�
 		user.setName("Borov");
 		User valid = userController.put(user);
 		assertEquals(valid, user, "Изменение юзера не работает"); // изменение юзера
+
+		User user1 = new User();
+		user1.setId(3);
+		user1.setEmail("user1@email.com");
+		user1.setLogin("Svin1");
+		user1.setName("Borov1");
+		user1.setBirthday(LocalDate.of(1895, 12, 28));
+		userController.create(user1);
+		User friend = service.add(1,3);
+		assertEquals(friend, user1, "Добавление в друзья не работает");
 
 	}
 }

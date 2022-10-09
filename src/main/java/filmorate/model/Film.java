@@ -9,10 +9,10 @@ import java.util.Set;
 
 @Data
 public class Film {
-    Set<User> liked = new HashSet<>();
-    int likes = 0;
+    Set<Integer> liked = new HashSet<>();
+    int rate = 0;
 
-    int id = 1;
+    int id = 0;
 
     @NotNull
     @NotBlank
