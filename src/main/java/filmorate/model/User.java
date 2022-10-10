@@ -9,18 +9,18 @@ import java.util.Set;
 
 @Data
 public class User {
-    Set<Integer> friends = new HashSet<>();
-    int id = 0;
+    private final Set<Integer> friends = new HashSet<>();
+    private int id = 0;
 
     @Email
-    String email;
+    private String email;
 
     @NotNull
     @NotBlank
-    String login;
+    private String login;
 
-    String name = "";
+    private String name = "";
 
     @Past
-    LocalDate birthday;
+    private LocalDate birthday;
 }

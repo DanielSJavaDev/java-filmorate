@@ -31,8 +31,7 @@ class FilmorateApplicationTests { // класс тестов эндпоинто�
 	@Test
 	public void testFilmController() throws ValidationException {
 		InMemoryFilmStorage filmStorage = new InMemoryFilmStorage();
-		InMemoryUserStorage userStorage = new InMemoryUserStorage();
-		FilmService service = new FilmService(filmStorage, userStorage);
+		FilmService service = new FilmService(filmStorage);
 		FilmController filmController = new FilmController(filmStorage, service);
 		Film film = new Film();
 		film.setId(1);
