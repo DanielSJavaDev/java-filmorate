@@ -4,22 +4,27 @@ import lombok.Data;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 public class Film {
+    private final Set<Integer> liked = new HashSet<>();
+    private int rate = 0;
 
-    int id = 1;
+    private Integer id = 0;
 
     @NotNull
     @NotBlank
-    String name;
+    private String name;
 
     @Size(max = 200)
-    String description;
+    private String description;
 
     @Past
-    LocalDate releaseDate;
+    private LocalDate releaseDate;
 
     @Positive
-    long duration;
+    private long duration;
+
 }

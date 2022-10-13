@@ -1,8 +1,13 @@
 package filmorate.exception;
 
-public class ValidationException extends Throwable {
+public class ValidationException extends RuntimeException {
+    private final String parameter;
 
-    public ValidationException(final String message){
-        super(message);
+    public ValidationException (String parameter) {
+        this.parameter = parameter;
+    }
+
+    public String getParameter() {
+        return parameter;
     }
 }
