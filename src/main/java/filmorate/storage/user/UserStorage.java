@@ -1,4 +1,4 @@
-package filmorate.storage;
+package filmorate.storage.user;
 
 import filmorate.exception.ParameterNotFoundException;
 import filmorate.exception.ValidationException;

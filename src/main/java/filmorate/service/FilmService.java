@@ -2,7 +2,7 @@ package filmorate.service;
 
 import filmorate.exception.ParameterNotFoundException;
 import filmorate.model.Film;
-import filmorate.storage.FilmStorage;
+import filmorate.storage.film.FilmStorage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-
+/*
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -58,3 +58,4 @@ public class FilmService {
         filmStorage.getFilmData().get(filmId).getLiked().remove(userId);
     }
 }
+*/

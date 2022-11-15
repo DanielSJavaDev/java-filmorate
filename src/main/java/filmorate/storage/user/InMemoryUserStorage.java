@@ -1,4 +1,4 @@
-package filmorate.storage;
+package filmorate.storage.user;
 
 import filmorate.exception.ParameterNotFoundException;
 import filmorate.exception.ValidationException;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+/*
 @Slf4j
 @Component
 public class InMemoryUserStorage implements UserStorage {
@@ -69,10 +69,9 @@ public class InMemoryUserStorage implements UserStorage {
         } else {
             return user;
         }
-
     }
     @Override
     public Map<Integer, User> getUsersData() {
         return usersData;
     }
-}
+}*/

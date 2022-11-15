@@ -1,5 +1,6 @@
 package filmorate.model;
 
+import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.*;
@@ -8,10 +9,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Data
+@Builder
 public class User {
-    private final Set<Integer> friends = new HashSet<>();
-    private int id = 0;
-
     @Email
     private String email;
 
@@ -23,4 +22,8 @@ public class User {
 
     @Past
     private LocalDate birthday;
+
+    private Integer id = 0;
+
+    private final Set<Integer> friends = new HashSet<>();
 }

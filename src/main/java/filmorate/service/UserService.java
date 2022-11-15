@@ -2,14 +2,14 @@ package filmorate.service;
 
 import filmorate.exception.ParameterNotFoundException;
 import filmorate.model.User;
-import filmorate.storage.InMemoryUserStorage;
+//import filmorate.storage.user.InMemoryUserStorage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/*
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -83,4 +83,13 @@ public class UserService {
     private void deleteLike(int userId, int friendId) {
         userStorage.getUsersData().get(userId).getFriends().remove(friendId);
     }
+
+    public boolean getFriendship(int userId, int friendId) {
+        return userStorage.getFriendship(userId, friendId);
+    }
+
+    public boolean setFriendship(int id, int friendId, Boolean status) {
+        return userStorage.setFriendship(id, friendId, status);
+    }
 }
+*/
