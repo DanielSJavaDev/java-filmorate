@@ -1,8 +1,10 @@
 package filmorate.controller;
 
 import filmorate.exception.ParameterNotFoundException;
-import filmorate.service.FilmService;
-import filmorate.storage.InMemoryFilmStorage;
+//import filmorate.service.FilmService;
+import filmorate.storage.film.FilmDbStorage;
+//import filmorate.storage.film.InMemoryFilmStorage;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import filmorate.exception.ValidationException;
@@ -14,14 +16,9 @@ import java.util.*;
 @Slf4j
 @RestController
 @RequestMapping("/films")
-
+@RequiredArgsConstructor
 public class FilmController {
-    private final InMemoryFilmStorage filmStorage;
-    private final FilmService service;
-    public FilmController(InMemoryFilmStorage filmStorage, FilmService service) {
-        this.filmStorage = filmStorage;
-        this.service = service;
-    }
+    private final FilmDbStorage filmStorage;
 
     @GetMapping
     public List<Film> get() {
@@ -34,12 +31,12 @@ public class FilmController {
 
     @GetMapping("/popular")
     public List<Film> getPopular(@RequestParam(name = "count", defaultValue = "10", required = false) Integer size) {
-        return service.getRating(size);
+        return filmStorage.getTop(size);
     }
 
     @PostMapping
     public Film create(@Valid @RequestBody Film film) throws ValidationException {
-        return filmStorage.create(film);
+        return filmStorage.add(film);
     }
 
     @PutMapping
@@ -47,14 +44,14 @@ public class FilmController {
         return filmStorage.put(film);
     }
     @PutMapping("/{filmId}/like/{userId}")
-    public Film like(@PathVariable("filmId") int filmId,
+    public boolean like(@PathVariable("filmId") int filmId,
                      @PathVariable("userId") int userId) throws ParameterNotFoundException {
-        return service.addLike(filmId, userId);
+        return filmStorage.likeFilm(filmId, userId);
     }
 
     @DeleteMapping("/{filmId}/like/{userId}")
-    public String delete(@PathVariable("filmId") int filmId,
+    public boolean delete(@PathVariable("filmId") int filmId,
                          @PathVariable("userId") int userId) throws ParameterNotFoundException {
-        return service.deleteLike(filmId, userId);
+        return filmStorage.unlikeFilm(filmId, userId);
     }
 }
