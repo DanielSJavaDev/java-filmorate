@@ -64,7 +64,7 @@ public class FilmDbStorage implements DbFilm {
                 film.getDuration(), film.getMpa().getId(),  film.getId());
 
         updateGenre(film);
-        return film;
+        return getFilm(film.getId());
     }
 
     @Override
@@ -129,7 +129,13 @@ public class FilmDbStorage implements DbFilm {
         jdbcTemplate.update(delete, film.getId());
         String sqlQuery2 = "insert into film_genre (film_id, genre_id) values (?, ?);";
         if (film.getGenres() == null || film.getGenres().size() == 0) return;
-        film.getGenres().forEach(genre -> jdbcTemplate.update(sqlQuery2, film.getId(), genre.getId()));
+        List<Genre> genres = new ArrayList<>();
+        for (Genre genre : film.getGenres()) {
+            if (!genres.contains(genre)){
+                genres.add(genre);
+            }
+        }
+        genres.forEach(genre -> jdbcTemplate.update(sqlQuery2, film.getId(), genre.getId()));
     }
 
     @Override
