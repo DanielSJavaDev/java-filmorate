@@ -1,7 +1,6 @@
 # java-filmorate
-Database diagramm
 
-![This is an image] (https://github.com/DanielSJavaDev/java-filmorate/blob/add-database/database%20diagramm.png)
+![Database diagramm](https://github.com/DanielSJavaDev/java-filmorate/blob/add-database/database%20diagramm.png)
 
 SQL requests examples
 
