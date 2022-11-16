@@ -5,9 +5,7 @@ import lombok.Data;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @Builder
@@ -31,6 +29,6 @@ public class Film {
 
     private Integer likesCount;
 
-    private Set<Genre> genres;
+    private List<Genre> genres;
 
 }

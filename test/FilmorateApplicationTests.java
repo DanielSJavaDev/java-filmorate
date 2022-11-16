@@ -4,6 +4,8 @@ import filmorate.dao.MpaDaoImp;
 import filmorate.model.Film;
 import filmorate.storage.film.FilmDbStorage;
 import filmorate.storage.user.UserDbStorage;
+import filmorate.validate.FilmValidator;
+import filmorate.validate.UserValidator;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,7 +42,9 @@ class FilmorateApplicationTests { // класс тестов эндпоинто�
 		JdbcTemplate jdbc = new JdbcTemplate();
 		GenreDaoImp gdao = new GenreDaoImp(jdbc);
 		MpaDaoImp mdao = new MpaDaoImp(jdbc);
-		FilmDbStorage filmStorage = new FilmDbStorage(gdao, jdbc, mdao);
+		FilmValidator fv = new FilmValidator(jdbc);
+		UserValidator uv = new UserValidator(jdbc);
+		FilmDbStorage filmStorage = new FilmDbStorage(gdao, jdbc, mdao, fv, uv);
 
 		FilmController filmController = new FilmController(filmStorage);
 
@@ -66,7 +70,8 @@ class FilmorateApplicationTests { // класс тестов эндпоинто�
 	@Test
 	public void testUserController() throws ValidationException {
 		JdbcTemplate jdbc = new JdbcTemplate();
-		UserDbStorage userStorage = new UserDbStorage(jdbc);
+		UserValidator uv = new UserValidator(jdbc);
+		UserDbStorage userStorage = new UserDbStorage(jdbc, uv);
 		UserController userController = new UserController(userStorage);
 
 		user.setId(1);

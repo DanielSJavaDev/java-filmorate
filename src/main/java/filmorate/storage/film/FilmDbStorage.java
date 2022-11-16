@@ -110,7 +110,7 @@ public class FilmDbStorage implements DbFilm {
                 .description(rs.getString("description"))
                 .duration(rs.getInt("duration"))
                 .Mpa(mpa.getMpa(rs.getInt("mpa")))
-                .genres(new HashSet<>(createGenreList(rs)))
+                .genres(new ArrayList<>(createGenreList(rs)))
                 .releaseDate(LocalDate.parse(rs.getString("release_date")))
                 .likesCount(getLikesCount(rs.getInt("id")))
                 .build();
@@ -166,7 +166,6 @@ public class FilmDbStorage implements DbFilm {
                 .sorted((film2, film1) -> film1.getLikesCount().compareTo(film2.getLikesCount()))
                 .limit(size)
                 .collect(Collectors.toList());
-
         Collections.reverse(films);
 
         return new ArrayList<>(films);
