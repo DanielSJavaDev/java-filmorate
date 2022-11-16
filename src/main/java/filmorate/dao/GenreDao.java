@@ -2,10 +2,10 @@ package filmorate.dao;
 
 import filmorate.model.Genre;
 
-import java.util.Collection;
+import java.util.List;
 
 public interface GenreDao {
-    Collection<Genre> getAll();
+    List<Genre> getAll();
 
     Genre getGenreById(Integer genreId);
 }

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collection;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -18,13 +18,13 @@ public class MpaDaoImp implements MpaDao {
 
 
     @Override
-    public Collection<Mpa> getMpaList() {
+    public List<Mpa> getAllMpa() {
         String sqlQuery = "select * from mpa;";
         return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> createMpa(rs));
     }
 
     @Override
-    public Mpa getMpa(Integer ratingId) {
+    public Mpa getMpaByRatingId(Integer ratingId) {
         validateMpa(ratingId);
         String sqlQuery = "select * from mpa where id = ?;";
         return jdbcTemplate.queryForObject(sqlQuery, (rs, rowNum) -> createMpa(rs), ratingId);
@@ -33,7 +33,7 @@ public class MpaDaoImp implements MpaDao {
 
     private Mpa createMpa(ResultSet rs) throws SQLException {
         return Mpa.builder()
-                .id(rs.getLong("id"))
+                .id(rs.getInt("id"))
                 .name(rs.getString("name"))
                 .build();
     }

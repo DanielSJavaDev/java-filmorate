@@ -1,80 +1,82 @@
 import filmorate.FilmorateApplication;
-import filmorate.dao.GenreDaoImp;
-import filmorate.dao.MpaDaoImp;
 import filmorate.model.Film;
-import filmorate.storage.film.FilmDbStorage;
-import filmorate.storage.user.UserDbStorage;
-import filmorate.validate.FilmValidator;
-import filmorate.validate.UserValidator;
+import filmorate.model.Genre;
+import filmorate.model.Mpa;
+
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import filmorate.controller.FilmController;
 import filmorate.controller.UserController;
 import filmorate.exception.ValidationException;
 
 import filmorate.model.User;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
+@AutoConfigureTestDatabase
 @SpringBootTest(classes = FilmorateApplication.class)
 class FilmorateApplicationTests { // класс тестов эндпоинтов
+	private final FilmController filmController;
+	private final UserController userController;
 	private Film film;
 	private User user;
+	private Mpa mpa;
 
 	@Test
 	void contextLoads() {
 	}
+
 	@BeforeEach
 	void createFilm(){
 		film = Film.builder().build();
 		user = User.builder().build();
+		mpa = Mpa.builder().build();
 	}
 
+	@Sql(scripts = "/testdata.sql")
 	@Test
 	public void testFilmController() throws ValidationException {
-		JdbcTemplate jdbc = new JdbcTemplate();
-		GenreDaoImp gdao = new GenreDaoImp(jdbc);
-		MpaDaoImp mdao = new MpaDaoImp(jdbc);
-		FilmValidator fv = new FilmValidator(jdbc);
-		UserValidator uv = new UserValidator(jdbc);
-		FilmDbStorage filmStorage = new FilmDbStorage(gdao, jdbc, mdao, fv, uv);
+		List<Genre> genres = new ArrayList<>();
 
-		FilmController filmController = new FilmController(filmStorage);
-
-		film.setId(1);
-		film.setDescription("I'm tired boss");
-		film.setReleaseDate(LocalDate.of(1895, 12, 28));
-		film.setDuration(90);
-		film.setName("Green mile");
+		mpa.setId(1);
+		mpa.setName("G");
+		film.setReleaseDate(LocalDate.of(1895, 12, 29));
+		film.setDuration(0);
+		film.setMpa(mpa);
 		Film result = filmController.create(film);
-		assertNotNull(filmController.get(), "Фильмы не возвращаются"); // тест гет запроса
-		assertEquals(result, film, "Фильмы не возвращаются"); // тест пост запроса
+		assertNotNull(result, "Фильмы не возвращаются");
+		assertEquals(result, film, "Фильмы не возвращаются");
 		film.setName("Psycho");
 		Film put = filmController.put(film);
+		put.setLikesCount(0);
+		put.setGenres(genres);
+		film.setLikesCount(0);
+		film.setGenres(genres);
 		assertEquals(put, film, "Фильмы не меняются"); // тест пут запроса
 		film.setReleaseDate(LocalDate.of(1895, 12, 27));
 		final ValidationException exception = assertThrows(
 				ValidationException.class,
-				() -> filmStorage.add(film)
+				() -> filmController.create(film)
 		);
-		assertEquals("Incorrect date", exception.getParameter()); // валидация даты
+		assertEquals("Film release date should not be earlier than December 28th of 1895",
+				exception.getParameter()); // валидация даты
+
 	}
 
 	@Test
 	public void testUserController() throws ValidationException {
-		JdbcTemplate jdbc = new JdbcTemplate();
-		UserValidator uv = new UserValidator(jdbc);
-		UserDbStorage userStorage = new UserDbStorage(jdbc, uv);
-		UserController userController = new UserController(userStorage);
 
-		user.setId(1);
 		user.setEmail("user@email.com");
 		user.setLogin("Svin");
 		user.setName("Borov");
@@ -86,17 +88,13 @@ class FilmorateApplicationTests { // класс тестов эндпоинто�
 				ValidationException.class,
 				() -> userController.create(user)
 		);
-		assertEquals("Incorrect login", exception.getParameter()); // валидация логина
+		assertEquals("Login should not be empty or contain spaces", exception.getParameter()); // валидация логина
 
 		user.setLogin("Svin");
 		user.setName("Borov");
 		User valid = userController.put(user);
 		assertEquals(valid, user, "Изменение юзера не работает"); // изменение юзера
 
-		boolean create = false;
-
-		boolean friend = userStorage.addFriend(1,3);
-		assertEquals(friend, create, "Добавление в друзья не работает");
 
 	}
 }

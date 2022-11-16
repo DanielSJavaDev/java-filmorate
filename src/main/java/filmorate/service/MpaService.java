@@ -16,11 +16,11 @@ public class MpaService {
 
     public Mpa findMpaById(int id) {
         log.info("Найден mpa " + id);
-        return mpaDao.getMpa(id);
+        return mpaDao.getMpaByRatingId(id);
     }
 
     public Collection<Mpa> findAllMpa() {
         log.info("Все mpa найдены");
-        return mpaDao.getMpaList();
+        return mpaDao.getAllMpa();
     }
 }

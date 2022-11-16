@@ -21,6 +21,7 @@ class ValidateRequestBodyControllerTest { // класс тестов по @Valid
     private static Validator validator;
     private Film film;
     private User user;
+
     @BeforeEach
     void models() {
         film = Film.builder().build();

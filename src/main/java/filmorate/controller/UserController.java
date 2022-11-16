@@ -1,10 +1,7 @@
 package filmorate.controller;
 
 import filmorate.exception.ParameterNotFoundException;
-//import filmorate.service.UserService;
-//import filmorate.storage.user.InMemoryUserStorage;
-import filmorate.exception.ValidationOfUserFound;
-import filmorate.storage.user.UserDbStorage;
+import filmorate.storage.user.UserDbStorageImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -19,20 +16,19 @@ import java.util.*;
 @RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
-    private final UserDbStorage userStorage;
-    //private final UserService service;
+    private final UserDbStorageImpl userStorage;
 
     @GetMapping
-    public Collection<User> get() {
+    public List<User> get() {
         return userStorage.getAllUsers();
     }
     @GetMapping("/{id}/friends")
-    public Collection<User> getFriends(@PathVariable("id") int userId) {
+    public List<User> getFriends(@PathVariable("id") int userId) {
         return userStorage.getFriendList(userId);
     }
 
     @GetMapping("/{id}/friends/common/{otherId}")
-    public Collection<User> getOtherFriends(@PathVariable("id") int userId,
+    public List<User> getOtherFriends(@PathVariable("id") int userId,
                                       @PathVariable("otherId") int otherId) {
         return userStorage.getCommonFriends(userId, otherId);
     }
@@ -53,24 +49,24 @@ public class UserController {
     }
 
     @PutMapping("/{userId}/friends/{friendId}")
-    public boolean addFriend(@PathVariable("userId") int userId,
+    public Boolean addFriend(@PathVariable("userId") int userId,
                           @PathVariable("friendId") int friendId) throws ParameterNotFoundException {
         return userStorage.addFriend(userId, friendId);
     }
 
     @DeleteMapping("/{userId}/friends/{friendId}")
-    public boolean deleteFriend(@PathVariable("userId") int userId,
+    public Boolean deleteFriend(@PathVariable("userId") int userId,
                              @PathVariable("friendId") int friendId) throws ParameterNotFoundException {
         return userStorage.removeFriend(userId, friendId);
     }
     @PutMapping("/{id}/friends/{friendId}/")
-    public boolean setMutualFriendship(@PathVariable int id,
+    public Boolean setMutualFriendship(@PathVariable int id,
                                        @PathVariable int friendId,
                                        @RequestParam("status") Boolean status){
         return userStorage.setFriendship(id, friendId, status);
     }
     @GetMapping("/friends/")
-    public boolean getFriendshipStatus(@RequestParam("userId") int userId, @RequestParam("friendId") int friendId){
+    public Boolean getFriendshipStatus(@RequestParam("userId") int userId, @RequestParam("friendId") int friendId){
         log.info(String.valueOf(getFriendshipStatus(userId, friendId)));
         return userStorage.getFriendship(userId, friendId);
     }

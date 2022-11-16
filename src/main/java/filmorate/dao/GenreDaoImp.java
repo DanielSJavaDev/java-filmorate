@@ -9,10 +9,7 @@ import org.springframework.stereotype.Component;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -20,7 +17,7 @@ public class GenreDaoImp implements GenreDao {
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public Collection<Genre> getAll() {
+    public List<Genre> getAll() {
         String sqlQuery = "select * from genres;";
         List<Genre> genres =  new ArrayList<>();
 
@@ -31,10 +28,9 @@ public class GenreDaoImp implements GenreDao {
     @Override
     public Genre getGenreById(Integer genreId) {
         validateGenreId(genreId);
-        return getAll().stream()
-                .filter(genre -> Objects.equals(genre.getId(), genreId))
-                .collect(Collectors.toList())
-                .get(0);
+
+        String sqlQuery = "select * from genres where id = ?;";
+        return jdbcTemplate.queryForObject(sqlQuery, (rs, rowNum) -> makeGenre(rs), genreId);
     }
 
     private Genre makeGenre(ResultSet rs) throws SQLException {

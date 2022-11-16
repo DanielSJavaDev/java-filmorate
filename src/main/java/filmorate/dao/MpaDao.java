@@ -2,12 +2,12 @@ package filmorate.dao;
 
 import filmorate.model.Mpa;
 
-import java.util.Collection;
+import java.util.List;
 
 
 public interface MpaDao {
 
-    Collection<Mpa> getMpaList();
+    List<Mpa> getAllMpa();
 
-    Mpa getMpa(Integer ratingId);
+    Mpa getMpaByRatingId(Integer ratingId);
 }

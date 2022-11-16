@@ -1,9 +1,7 @@
 package filmorate.controller;
 
 import filmorate.exception.ParameterNotFoundException;
-//import filmorate.service.FilmService;
-import filmorate.storage.film.FilmDbStorage;
-//import filmorate.storage.film.InMemoryFilmStorage;
+import filmorate.storage.film.FilmDbStorageImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -18,15 +16,15 @@ import java.util.*;
 @RequestMapping("/films")
 @RequiredArgsConstructor
 public class FilmController {
-    private final FilmDbStorage filmStorage;
+    private final FilmDbStorageImpl filmStorage;
 
     @GetMapping
     public List<Film> get() {
-        return filmStorage.getData();
+        return filmStorage.getAllFilms();
     }
     @GetMapping("/{filmId}")
     public Film findById(@PathVariable("filmId") int filmId) throws ParameterNotFoundException {
-        return filmStorage.getFilm(filmId);
+        return filmStorage.getFilmById(filmId);
     }
 
     @GetMapping("/popular")
@@ -44,13 +42,13 @@ public class FilmController {
         return filmStorage.put(film);
     }
     @PutMapping("/{filmId}/like/{userId}")
-    public boolean like(@PathVariable("filmId") int filmId,
+    public Boolean like(@PathVariable("filmId") int filmId,
                      @PathVariable("userId") int userId) throws ParameterNotFoundException {
         return filmStorage.likeFilm(filmId, userId);
     }
 
     @DeleteMapping("/{filmId}/like/{userId}")
-    public boolean delete(@PathVariable("filmId") int filmId,
+    public Boolean delete(@PathVariable("filmId") int filmId,
                          @PathVariable("userId") int userId) throws ParameterNotFoundException {
         return filmStorage.unlikeFilm(filmId, userId);
     }
