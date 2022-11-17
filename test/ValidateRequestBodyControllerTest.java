@@ -1,8 +1,6 @@
-package ru.yandex.practicum.filmorate;
-
-
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import filmorate.model.Film;
 import filmorate.model.User;
@@ -21,6 +19,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class ValidateRequestBodyControllerTest { // класс тестов по @Valid
     private static ValidatorFactory validatorFactory;
     private static Validator validator;
+    private Film film;
+    private User user;
+
+    @BeforeEach
+    void models() {
+        film = Film.builder().build();
+        user = User.builder().build();
+    }
 
     @BeforeAll
     static void validators() {
@@ -34,7 +40,7 @@ class ValidateRequestBodyControllerTest { // класс тестов по @Valid
 
     @Test
     void whenInputIsInvalid_thenReturnsStatus400forFilm() {
-        Film film = new Film();
+
         film.setId(1);
         film.setName("Green mile");
         film.setDescription("I'm tired bosssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss" +
@@ -43,7 +49,7 @@ class ValidateRequestBodyControllerTest { // класс тестов по @Valid
                 "ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss" +
                 "ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss");
         film.setReleaseDate(LocalDate.of(1895, 12, 28));
-        film.setDuration(90L);
+        film.setDuration(90);
         Set<ConstraintViolation<Film>> violations = validator.validate(film);
         assertEquals(violations.size(), 1); // тест описания
         film.setDescription("I'm tired boss");
@@ -65,10 +71,10 @@ class ValidateRequestBodyControllerTest { // класс тестов по @Valid
         assertEquals(violations.size(), 1); // тест имени на null
         film.setName("Green mile");
 
-        film.setDuration(-1L);
+        film.setDuration(-1);
         violations = validator.validate(film);
         assertEquals(violations.size(), 1); // тест имени на null
-        film.setDuration(90L);
+        film.setDuration(90);
 
         violations = validator.validate(film);
         assertEquals(violations.size(), 0); // контрольный(все поля валидны)
@@ -76,7 +82,7 @@ class ValidateRequestBodyControllerTest { // класс тестов по @Valid
 
     @Test
     void whenInputIsInvalid_thenReturnsStatus400forUser() {
-        User user = new User();
+
         user.setId(1);
         user.setEmail("user@email.com");
         user.setLogin("Svin");
